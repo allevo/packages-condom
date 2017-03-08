@@ -42,15 +42,15 @@ var nodeModules = {
 
 function getGlobStream (pattern, option) {
   var isFileFilter = new Transform({
-    objectMode: true,
-    transform (chunk, encoding, callback) {
-      fs.lstat(chunk.path, function lstatHandler (err, stats) {
-        if (err) return callback(err)
-        if (!stats.isFile()) return callback()
-        callback(null, chunk)
-      })
-    }
+    objectMode: true
   })
+  isFileFilter._transform = function transform (chunk, encoding, callback) {
+    fs.lstat(chunk.path, function lstatHandler (err, stats) {
+      if (err) return callback(err)
+      if (!stats.isFile()) return callback()
+      callback(null, chunk)
+    })
+  }
   return globStream(pattern, option)
     .pipe(isFileFilter)
 }
@@ -97,8 +97,8 @@ function start (options) {
         .pipe(new CountLineStream(c.path))
     })
     globStream.pause()
-    initialStreams.forEach(f => f.on('end', onStreamEnd))
-    initialStreams.forEach(f => f.pipe(filterRequireLineStream, {end: false}))
+    initialStreams.forEach(function (f) { f.on('end', onStreamEnd) })
+    initialStreams.forEach(function (f) { f.pipe(filterRequireLineStream, {end: false}) })
   }
 
   function onData (c) {
@@ -110,21 +110,21 @@ function start (options) {
   globStream.on('data', onData)
 
   var filterRequireLineStream = new Transform({
-    objectMode: true,
-    transform (chunk, encoding, callback) {
-      var match = chunk.chunk.match(requireRegExp)
-      if (!match) return callback()
-      var requiredModule = match[1]
-
-      if (nodeModules[requiredModule]) return callback()
-      if (packageJson.dependencies[requiredModule]) return callback()
-      if (packageJson.peerDependencies[requiredModule]) return callback()
-      if (isNonLocalModuleRegExp.test(requiredModule)) return callback()
-
-      chunk.requiredModule = requiredModule
-      callback(null, chunk)
-    }
+    objectMode: true
   })
+  filterRequireLineStream._transform = function transform (chunk, encoding, callback) {
+    var match = chunk.chunk.match(requireRegExp)
+    if (!match) return callback()
+    var requiredModule = match[1]
+
+    if (nodeModules[requiredModule]) return callback()
+    if (packageJson.dependencies[requiredModule]) return callback()
+    if (packageJson.peerDependencies[requiredModule]) return callback()
+    if (isNonLocalModuleRegExp.test(requiredModule)) return callback()
+
+    chunk.requiredModule = requiredModule
+    callback(null, chunk)
+  }
   filterRequireLineStream.setMaxListeners(Infinity)
 
   function onStreamEnd () {
