@@ -1,0 +1,40 @@
+{
+  "name": "packages-condom",
+  "version": "1.0.0",
+  "description": "Check your code are not using some dev depedencies",
+  "main": "index.js",
+  "bin": {
+    "packages-condom": "index.js"
+  },
+  "scripts": {
+    "lint": "standard | snazzy",
+    "unit": "tap test/*.js",
+    "test": "npm run lint && npm run unit",
+    "coverage": "tap --cov --coverage-report=html test/*.js",
+    "coveralls": "tap test/*.js --cov --coverage-report=text-lcov | coveralls"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/allevo/packages-condom.git"
+  },
+  "engines": {
+    "node": ">=0.12"
+  },
+  "author": "allevo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/allevo/packages-condom/issues"
+  },
+  "homepage": "https://github.com/allevo/packages-condom#readme",
+  "dependencies": {
+    "coveralls": "^2.12.0",
+    "glob-stream": "^6.1.0",
+    "minimist": "^1.2.0",
+    "split": "^1.0.0"
+  },
+  "devDependencies": {
+    "snazzy": "^6.0.0",
+    "standard": "^9.0.1",
+    "tap": "^10.3.0"
+  }
+}
