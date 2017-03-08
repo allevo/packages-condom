@@ -11,6 +11,7 @@ if (!fs.lstatSync(basePath).isDirectory()) {
 
 var condom = require('./condom')
 
+// TODO: add other parameters
 var stream = condom({
   globOptions: {
     cwd: basePath
