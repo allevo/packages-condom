@@ -10,5 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "benchmark": "^2.1.3"
+  },
+  "peerDependencies": {
+    "pump": "^2.1.3"
   }
 }

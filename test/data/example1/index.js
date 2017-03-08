@@ -3,6 +3,8 @@
 
 var fs = require('fs')
 
+var localModule = require('./localModule')
+
 var benchmark = require('benchmark')
 var split = require('split')
 var pump = require('pump')

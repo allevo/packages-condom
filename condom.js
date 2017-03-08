@@ -76,10 +76,11 @@ CountLineStream.prototype._transform = function countLineStreamTransform (chunk,
 
 function start (options) {
   options = options || {}
-  var globPattern = options.globPattern || ['**/*.js', '!node_modules/**/*']
+  var globPattern = options.globPattern || ['**/*.js', '!node_modules/**/*', '!test/**/*', '!tests/**/*']
   var globOptions = options.globOptions || {}
   var packageJson = options.packageJson || {}
   packageJson.dependencies = packageJson.dependencies || {}
+  packageJson.peerDependencies = packageJson.peerDependencies || {}
 
   globOptions.absolute = true
   var globStream = getGlobStream(globPattern, globOptions)
@@ -91,7 +92,6 @@ function start (options) {
     globStream.removeListener('end', _start)
     var initialStreams = initialChunks.map(function (c) {
       openedStream++
-      console.log('_start', c.path)
       return fs.createReadStream(c.path)
         .pipe(split())
         .pipe(new CountLineStream(c.path))
@@ -118,6 +118,7 @@ function start (options) {
 
       if (nodeModules[requiredModule]) return callback()
       if (packageJson.dependencies[requiredModule]) return callback()
+      if (packageJson.peerDependencies[requiredModule]) return callback()
       if (isNonLocalModuleRegExp.test(requiredModule)) return callback()
 
       chunk.requiredModule = requiredModule
