@@ -1,0 +1,27 @@
+{
+  "name": "packages-condom",
+  "version": "1.0.0",
+  "description": "Check your code are not using some dev depedencies Edit",
+  "main": "index.js",
+  "scripts": {
+    "test": "tap test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/allevo/packages-condom.git"
+  },
+  "author": "allevo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/allevo/packages-condom/issues"
+  },
+  "homepage": "https://github.com/allevo/packages-condom#readme",
+  "dependencies": {
+    "glob-stream": "^6.1.0",
+    "split": "^1.0.0"
+  },
+  "devDependencies": {
+    "standard": "^9.0.1",
+    "tap": "^10.3.0"
+  }
+}
