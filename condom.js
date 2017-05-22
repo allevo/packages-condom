@@ -3,42 +3,13 @@
 var fs = require('fs')
 var Transform = require('stream').Transform
 
+var isBuiltinModule = require('is-builtin-module')
 var globStream = require('glob-stream')
 var split = require('split')
 
 var requireRegExp = /require\s*\(\s*["']([^"']*)["']\s*\)/
+var isCommentRegxp = /^\s*(\*|\/\/)/
 var isNonLocalModuleRegExp = /^\W/
-var nodeModules = {
-  assert: true,
-  buffer: true,
-  child_process: true,
-  cluster: true,
-  console: true,
-  crypto: true,
-  dns: true,
-  domain: true,
-  events: true,
-  fs: true,
-  http: true,
-  https: true,
-  net: true,
-  os: true,
-  path: true,
-  punycode: true,
-  querystring: true,
-  readline: true,
-  repl: true,
-  stream: true,
-  string_decoder: true,
-  tls: true,
-  tty: true,
-  dgram: true,
-  url: true,
-  util: true,
-  v8: true,
-  vm: true,
-  zlib: true
-}
 
 function getGlobStream (pattern, option) {
   var isFileFilter = new Transform({
@@ -81,6 +52,11 @@ function start (options) {
   var packageJson = options.packageJson || {}
   packageJson.dependencies = packageJson.dependencies || {}
   packageJson.peerDependencies = packageJson.peerDependencies || {}
+  packageJson.optionalDependencies = packageJson.optionalDependencies || {}
+
+  var allowDependencies = options.dependencies || true
+  var allowPeerDependencies = options.peerDependencies || false
+  var allowOptionalDependency = options.optionalDependency || true
 
   globOptions.absolute = true
   var globStream = getGlobStream(globPattern, globOptions)
@@ -117,9 +93,13 @@ function start (options) {
     if (!match) return callback()
     var requiredModule = match[1]
 
-    if (nodeModules[requiredModule]) return callback()
-    if (packageJson.dependencies[requiredModule]) return callback()
-    if (packageJson.peerDependencies[requiredModule]) return callback()
+    var isComment = chunk.chunk.match(isCommentRegxp)
+    if (isComment) return callback()
+
+    if (isBuiltinModule(requiredModule)) return callback()
+    if (allowDependencies && packageJson.dependencies[requiredModule]) return callback()
+    if (allowPeerDependencies && packageJson.peerDependencies[requiredModule]) return callback()
+    if (allowOptionalDependency && packageJson.optionalDependencies[requiredModule]) return callback()
     if (isNonLocalModuleRegExp.test(requiredModule)) return callback()
 
     chunk.requiredModule = requiredModule

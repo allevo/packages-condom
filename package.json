@@ -18,7 +18,7 @@
     "url": "git+https://github.com/allevo/packages-condom.git"
   },
   "engines": {
-    "node": ">=0.12"
+    "node": ">=4"
   },
   "author": "allevo",
   "license": "MIT",
@@ -27,14 +27,17 @@
   },
   "homepage": "https://github.com/allevo/packages-condom#readme",
   "dependencies": {
-    "coveralls": "^2.12.0",
     "glob-stream": "^6.1.0",
+    "is-builtin-module": "^1.0.0",
     "minimist": "^1.2.0",
     "split": "^1.0.0"
   },
   "devDependencies": {
+    "coveralls": "^2.12.0",
+    "download-git-repo": "^1.0.1",
     "snazzy": "^6.0.0",
     "standard": "^9.0.1",
-    "tap": "^10.3.0"
+    "tap": "^10.3.0",
+    "unzip": "^0.1.11"
   }
 }

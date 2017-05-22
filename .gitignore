@@ -38,3 +38,6 @@ jspm_packages
 
 
 test/data/example1
+test/data/express
+test/data/debug
+test/data/react

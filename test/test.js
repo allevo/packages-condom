@@ -10,6 +10,7 @@ tap.test('ok', function (t) {
   t.plan(2)
   var stream = condom({
     packageJson: require('./data/example1/package'),
+    peerDependencies: true,
     globOptions: {
       cwd: path.join(__dirname, '/data/example1')
     }
@@ -27,7 +28,7 @@ tap.test('ok', function (t) {
     occurred[d.requiredModule]++
   })
   stream.on('finish', function () {
-    t.same(occurred, { split: 1, express: 1, jquery: 14 })
+    t.same(occurred, { split: 1, express: 1 })
     var expectedPaths = [
       path.join(__dirname, '/data/example1/index.js'),
       path.join(__dirname, '/data/example1/jquery-3.1.1_1.js'),
