@@ -3,7 +3,7 @@
 var fs = require('fs')
 var path = require('path')
 var argv = require('minimist')(process.argv.slice(2), {
-  boolean: ['only-dependency']
+  boolean: ['only-dependency', 'no-dependency', 'peer-dependency', 'no-optional-dependency']
 })
 
 var basePath = argv._.pop() + ''
@@ -18,25 +18,30 @@ var globOptions = {
 }
 var options = {
   globOptions: globOptions,
-  packageJson: require(path.join(basePath, 'package')),
+  packageJson: require(path.resolve(path.join(basePath, 'package.json'))),
   dependencies: true,
   peerDependencies: false,
-  optionalDependency: true
+  optionalDependencies: true
 }
 if (argv['no-dependency']) {
-  options.dependency = false
+  options.dependencies = false
 }
 
-if (argv['no-peer-dependency']) {
-  options.onlyDependency = false
+if (argv['peer-dependency']) {
+  options.peerDependencies = false
 }
 if (argv['no-optional-dependency']) {
-  options.onlyDependency = false
+  options.optionalDependencies = false
 }
 
 // TODO: add other parameters
 var stream = condom(options)
 
+var exitStatus = 0
 stream.on('data', function (d) {
   console.log(d)
+  exitStatus = 1
+})
+stream.on('end', function () {
+  process.exit(exitStatus)
 })

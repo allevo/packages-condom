@@ -56,7 +56,7 @@ function start (options) {
 
   var allowDependencies = options.dependencies || true
   var allowPeerDependencies = options.peerDependencies || false
-  var allowOptionalDependency = options.optionalDependency || true
+  var allowOptionalDependency = options.optionalDependencies || true
 
   globOptions.absolute = true
   var globStream = getGlobStream(globPattern, globOptions)
@@ -95,7 +95,6 @@ function start (options) {
 
     var isComment = chunk.chunk.match(isCommentRegxp)
     if (isComment) return callback()
-
     if (isBuiltinModule(requiredModule)) return callback()
     if (allowDependencies && packageJson.dependencies[requiredModule]) return callback()
     if (allowPeerDependencies && packageJson.peerDependencies[requiredModule]) return callback()
