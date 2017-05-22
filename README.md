@@ -22,7 +22,7 @@ npm install -g packages-condom
 packages-condom <path>
 ```
 
-Without any parameters, the condom checks all requires are included as dependency or optionalDependency. By default, the peerDependency are not allowed.
+Without any parameters, the condom checks all requires are included as dependencies or optionalDependencies. By default, the peerDependencies are not allowed.
 
 To change the default configuration, some CLI parameters are allowed:
 
