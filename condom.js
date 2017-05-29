@@ -95,11 +95,20 @@ function start (options) {
 
     var isComment = chunk.chunk.match(isCommentRegxp)
     if (isComment) return callback()
+    if (isNonLocalModuleRegExp.test(requiredModule)) return callback()
     if (isBuiltinModule(requiredModule)) return callback()
+
     if (allowDependencies && packageJson.dependencies[requiredModule]) return callback()
     if (allowPeerDependencies && packageJson.peerDependencies[requiredModule]) return callback()
     if (allowOptionalDependency && packageJson.optionalDependencies[requiredModule]) return callback()
-    if (isNonLocalModuleRegExp.test(requiredModule)) return callback()
+
+    var submoduleSplitted = requiredModule.split('/')
+    if (submoduleSplitted.length > 1) {
+      requiredModule = submoduleSplitted[0]
+      if (allowDependencies && packageJson.dependencies[requiredModule]) return callback()
+      if (allowPeerDependencies && packageJson.peerDependencies[requiredModule]) return callback()
+      if (allowOptionalDependency && packageJson.optionalDependencies[requiredModule]) return callback()
+    }
 
     chunk.requiredModule = requiredModule
     callback(null, chunk)
