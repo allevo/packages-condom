@@ -20,10 +20,9 @@ download('facebook/react', 'test/data/react', function (err) {
       }
     })
 
-    stream.on('data', function (d) { })
-    stream.on('finish', function () {
+    stream.on('end', function () {
       t.ok(true)
-      t.end()
     })
+    stream.resume()
   })
 })

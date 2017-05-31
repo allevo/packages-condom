@@ -98,16 +98,34 @@ function start (options) {
     if (isNonLocalModuleRegExp.test(requiredModule)) return callback()
     if (isBuiltinModule(requiredModule)) return callback()
 
-    if (allowDependencies && packageJson.dependencies[requiredModule]) return callback()
-    if (allowPeerDependencies && packageJson.peerDependencies[requiredModule]) return callback()
-    if (allowOptionalDependency && packageJson.optionalDependencies[requiredModule]) return callback()
+    if (allowDependencies && packageJson.dependencies[requiredModule]) {
+      delete this.unusedPackages[requiredModule]
+      return callback()
+    }
+    if (allowPeerDependencies && packageJson.peerDependencies[requiredModule]) {
+      delete this.unusedPackages[requiredModule]
+      return callback()
+    }
+    if (allowOptionalDependency && packageJson.optionalDependencies[requiredModule]) {
+      delete this.unusedPackages[requiredModule]
+      return callback()
+    }
 
     var submoduleSplitted = requiredModule.split('/')
     if (submoduleSplitted.length > 1) {
       requiredModule = submoduleSplitted[0]
-      if (allowDependencies && packageJson.dependencies[requiredModule]) return callback()
-      if (allowPeerDependencies && packageJson.peerDependencies[requiredModule]) return callback()
-      if (allowOptionalDependency && packageJson.optionalDependencies[requiredModule]) return callback()
+      if (allowDependencies && packageJson.dependencies[requiredModule]) {
+        delete this.unusedPackages[requiredModule]
+        return callback()
+      }
+      if (allowPeerDependencies && packageJson.peerDependencies[requiredModule]) {
+        delete this.unusedPackages[requiredModule]
+        return callback()
+      }
+      if (allowOptionalDependency && packageJson.optionalDependencies[requiredModule]) {
+        delete this.unusedPackages[requiredModule]
+        return callback()
+      }
     }
 
     chunk.requiredModule = requiredModule
@@ -130,6 +148,8 @@ function start (options) {
       .on('end', onStreamEnd)
       .pipe(filterRequireLineStream, {end: false})
   }
+
+  filterRequireLineStream.unusedPackages = Object.assign({}, packageJson.dependencies, packageJson.optionalDependencies)
 
   return filterRequireLineStream
 }

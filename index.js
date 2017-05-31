@@ -35,7 +35,6 @@ if (argv['no-optional-dependency']) {
   options.optionalDependencies = false
 }
 
-// TODO: add other parameters
 var stream = condom(options)
 
 var exitStatus = 0
@@ -44,5 +43,6 @@ stream.on('data', function (d) {
   exitStatus = 1
 })
 stream.on('end', function () {
+  console.log('Unused packages', stream.unusedPackages)
   process.exit(exitStatus)
 })

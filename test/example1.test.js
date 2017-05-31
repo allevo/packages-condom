@@ -27,7 +27,7 @@ tap.test('ok', function (t) {
     occurred[d.requiredModule] = occurred[d.requiredModule] || 0
     occurred[d.requiredModule]++
   })
-  stream.on('finish', function () {
+  stream.on('end', function () {
     t.same(occurred, { split: 1, express: 1 })
     var expectedPaths = [
       path.join(__dirname, '/data/example1/index.js'),
@@ -47,6 +47,5 @@ tap.test('ok', function (t) {
       path.join(__dirname, '/data/example1/jquery_9.js')
     ]
     t.same(Object.keys(paths), expectedPaths)
-    t.end()
   })
 })

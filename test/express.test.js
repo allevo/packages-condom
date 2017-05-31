@@ -21,10 +21,9 @@ download('expressjs/express', 'test/data/express', function (err) {
     })
 
     stream.on('data', function (d) {
-      console.log(d)
-      t.fail()
+      t.fail(d)
     })
-    stream.on('finish', function () {
+    stream.on('end', function () {
       t.ok(true)
       t.end()
     })

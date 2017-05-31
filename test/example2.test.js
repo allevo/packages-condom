@@ -16,19 +16,12 @@ tap.test('ok', function (t) {
     }
   })
 
-  var paths = {}
-  stream.on('pipe', function (source) {
-    if (paths[source.filePath]) t.fail('File double scanned')
-    paths[source.filePath] = 1
-  })
-
   var occurred = {}
   stream.on('data', function (d) {
     occurred[d.requiredModule] = occurred[d.requiredModule] || 0
     occurred[d.requiredModule]++
   })
-  stream.on('finish', function () {
+  stream.on('end', function () {
     t.same(occurred, {})
-    t.end()
   })
 })
