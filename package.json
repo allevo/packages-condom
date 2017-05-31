@@ -1,6 +1,6 @@
 {
   "name": "packages-condom",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Check your code are not using some dev depedencies",
   "main": "index.js",
   "bin": {
