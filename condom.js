@@ -89,47 +89,54 @@ function start (options) {
     objectMode: true
   })
   filterRequireLineStream._transform = function transform (chunk, encoding, callback) {
-    var match = chunk.chunk.match(requireRegExp)
-    if (!match) return callback()
-    var requiredModule = match[1]
-
     var isComment = chunk.chunk.match(isCommentRegxp)
     if (isComment) return callback()
-    if (isNonLocalModuleRegExp.test(requiredModule)) return callback()
-    if (isBuiltinModule(requiredModule)) return callback()
 
-    if (allowDependencies && packageJson.dependencies[requiredModule]) {
-      delete this.unusedPackages[requiredModule]
-      return callback()
-    }
-    if (allowPeerDependencies && packageJson.peerDependencies[requiredModule]) {
-      delete this.unusedPackages[requiredModule]
-      return callback()
-    }
-    if (allowOptionalDependency && packageJson.optionalDependencies[requiredModule]) {
-      delete this.unusedPackages[requiredModule]
-      return callback()
-    }
+    var line = chunk.chunk
+    let index = 0
+    while (true) {
+      var match = line.substr(index).match(requireRegExp)
+      // no other matches
+      if (!match) break
+      var requiredModule = match[1]
+      index += match.index + 1
 
-    var submoduleSplitted = requiredModule.split('/')
-    if (submoduleSplitted.length > 1) {
-      requiredModule = submoduleSplitted[0]
+      if (isNonLocalModuleRegExp.test(requiredModule)) continue
+      if (isBuiltinModule(requiredModule)) continue
+
       if (allowDependencies && packageJson.dependencies[requiredModule]) {
         delete this.unusedPackages[requiredModule]
-        return callback()
+        continue
       }
       if (allowPeerDependencies && packageJson.peerDependencies[requiredModule]) {
         delete this.unusedPackages[requiredModule]
-        return callback()
+        continue
       }
       if (allowOptionalDependency && packageJson.optionalDependencies[requiredModule]) {
         delete this.unusedPackages[requiredModule]
-        return callback()
+        continue
       }
-    }
 
-    chunk.requiredModule = requiredModule
-    callback(null, chunk)
+      var submoduleSplitted = requiredModule.split('/')
+      if (submoduleSplitted.length > 1) {
+        requiredModule = submoduleSplitted[0]
+        if (allowDependencies && packageJson.dependencies[requiredModule]) {
+          delete this.unusedPackages[requiredModule]
+          continue
+        }
+        if (allowPeerDependencies && packageJson.peerDependencies[requiredModule]) {
+          delete this.unusedPackages[requiredModule]
+          continue
+        }
+        if (allowOptionalDependency && packageJson.optionalDependencies[requiredModule]) {
+          delete this.unusedPackages[requiredModule]
+          continue
+        }
+      }
+      chunk.requiredModule = requiredModule
+      this.push(chunk)
+    }
+    callback()
   }
   filterRequireLineStream.setMaxListeners(Infinity)
 

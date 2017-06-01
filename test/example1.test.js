@@ -28,7 +28,7 @@ tap.test('ok', function (t) {
     occurred[d.requiredModule]++
   })
   stream.on('end', function () {
-    t.same(occurred, { split: 1, express: 1 })
+    t.same(occurred, { split: 1, express: 1, foo: 1, bar: 1 })
     var expectedPaths = [
       path.join(__dirname, '/data/example1/index.js'),
       path.join(__dirname, '/data/example1/jquery-3.1.1_1.js'),
