@@ -12,4 +12,6 @@ var express = require('express')
 
 var v8 = require('v8')
 
+require('@types/blablabla')
+
 require('foo')(require('bar'))

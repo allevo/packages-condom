@@ -9,7 +9,7 @@ var split = require('split')
 
 var requireRegExp = /require\s*\(\s*["']([^"']*)["']\s*\)/
 var isCommentRegxp = /^\s*(\*|\/\/)/
-var isNonLocalModuleRegExp = /^\W/
+var isNonLocalModuleRegExp = /^\./
 
 function getGlobStream (pattern, option) {
   var isFileFilter = new Transform({
@@ -118,7 +118,7 @@ function start (options) {
       }
 
       var submoduleSplitted = requiredModule.split('/')
-      if (submoduleSplitted.length > 1) {
+      if (submoduleSplitted.length > 1 && requiredModule[0] !== '@') {
         requiredModule = submoduleSplitted[0]
         if (allowDependencies && packageJson.dependencies[requiredModule]) {
           delete this.unusedPackages[requiredModule]
@@ -136,6 +136,7 @@ function start (options) {
       chunk.requiredModule = requiredModule
       this.push(chunk)
     }
+
     callback()
   }
   filterRequireLineStream.setMaxListeners(Infinity)
