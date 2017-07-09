@@ -1,6 +1,13 @@
 Changelog
 ---------
 
+# v1.1.1
+- fix @ import
+- fix multiline import
+
+# v1.1.0
+- exit code
+
 # v1.0.2
 - Fix require submodules (see test/example2.test.js)
 
