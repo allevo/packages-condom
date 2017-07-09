@@ -8,12 +8,15 @@ module.exports = function (stream, outputStream) {
   const options = {readableObjectMode: false, writableObjectMode: true}
   const transform = through2(options, function (data, enc, callback) {
     exitStatus = 1
-    // console.log(data)
-    const {line: lineNumber, filePath, requiredModule, type, packageName} = data
 
+    const type = data.type
     if (type === 'miss') {
+      const lineNumber = data.line
+      const filePath = data.filePath
+      const requiredModule = data.requiredModule
       callback(null, 'Package ' + requiredModule + ' is required at ' + filePath + ':' + lineNumber + '\n')
     } else {
+      const packageName = data.packageName
       callback(null, 'Unused package ' + packageName + '\n')
     }
   })

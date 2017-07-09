@@ -1,7 +1,9 @@
 'use strict'
 
 var fs = require('fs')
-var {Transform, PassThrough} = require('stream')
+var stream = require('stream')
+var Transform = stream.Transform
+var PassThrough = stream.PassThrough
 
 var isBuiltinModule = require('is-builtin-module')
 var globStream = require('glob-stream')
