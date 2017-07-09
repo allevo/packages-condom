@@ -18,7 +18,6 @@ module.exports = function (stream, outputStream) {
     }
   })
   transform.on('end', function (cb) {
-    console.log('Unused packages', stream.unusedPackages)
     process.exit(exitStatus)
   })
 

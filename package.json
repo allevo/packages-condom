@@ -8,10 +8,11 @@
   },
   "scripts": {
     "lint": "standard | snazzy",
-    "unit": "tap test/*.js",
-    "test": "npm run lint && npm run unit",
-    "coverage": "tap --cov --coverage-report=html test/*.js",
-    "coveralls": "tap test/*.js --cov --coverage-report=text-lcov | coveralls"
+    "unit": "tap -J -t 60 test/*.js",
+    "test": "npm run lint && npm run unit && npm run condom",
+    "condom": "node index.js .",
+    "coverage": "tap --cov --coverage-report=html -J -t 60 test/*.js",
+    "coveralls": "tap test/*.js --cov --coverage-report=text-lcov -J -t 60 | coveralls"
   },
   "repository": {
     "type": "git",
