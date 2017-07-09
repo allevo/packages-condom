@@ -36,13 +36,6 @@ if (argv['no-optional-dependency']) {
 }
 
 var stream = condom(options)
+var output = require('./output')
 
-var exitStatus = 0
-stream.on('data', function (d) {
-  console.log(d)
-  exitStatus = 1
-})
-stream.on('end', function () {
-  console.log('Unused packages', stream.unusedPackages)
-  process.exit(exitStatus)
-})
+output(stream, require('stdout-stream'))

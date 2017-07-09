@@ -27,10 +27,14 @@
   },
   "homepage": "https://github.com/allevo/packages-condom#readme",
   "dependencies": {
+    "flush-write-stream": "^1.0.2",
     "glob-stream": "^6.1.0",
     "is-builtin-module": "^1.0.0",
     "minimist": "^1.2.0",
-    "split": "^1.0.0"
+    "pump": "^1.0.2",
+    "split": "^1.0.0",
+    "stdout-stream": "^1.4.0",
+    "through2": "^2.0.3"
   },
   "devDependencies": {
     "coveralls": "^2.12.0",

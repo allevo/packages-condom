@@ -12,8 +12,8 @@ tap.test('exit code', t => {
 
   childProcess.execFile('node', [indexPath, example1Path], (error, stdout, stderr) => {
     t.equal(error.code, 1)
-    t.match(stdout, 'requiredModule: \'split\'')
-    t.match(stdout, 'requiredModule: \'pump\'')
-    t.match(stdout, 'requiredModule: \'express\'')
+    t.match(stdout, 'split')
+    t.match(stdout, 'pump')
+    t.match(stdout, 'express')
   })
 })
