@@ -33,7 +33,7 @@ tap.test('ok', function (t) {
     t.same(missesPackages, { split: 1, express: 1, foo: 1, bar: 1, '@types/blablabla': 1 })
 
     const unusedPackages = data.filter(c => c.type === 'unused').map(c => c.packageName)
-    t.same(unusedPackages, [])
+    t.same(unusedPackages, [ 'quiqui' ])
 
     var expectedPaths = [
       path.join(__dirname, '/data/example1/index.js'),
