@@ -1,7 +1,7 @@
 'use strict'
 
 var fs = require('fs')
-var Transform = require('stream').Transform
+var {Transform, PassThrough} = require('stream')
 
 var isBuiltinModule = require('is-builtin-module')
 var globStream = require('glob-stream')
@@ -133,8 +133,8 @@ function start (options) {
           continue
         }
       }
-      chunk.requiredModule = requiredModule
-      this.push(chunk)
+      var c = Object.assign({}, {type: 'miss', requiredModule}, chunk)
+      this.push(c)
     }
 
     callback()
@@ -144,8 +144,14 @@ function start (options) {
   function onStreamEnd () {
     openedStream--
     var f = globStream.read()
-    // no opened strem
-    if (openedStream === 0) return filterRequireLineStream.end()
+    // no opened stream
+    if (openedStream === 0) {
+      // All files are done
+      Object.keys(filterRequireLineStream.unusedPackages).forEach(packageName => {
+        returnStream.write({ type: 'unused', packageName })
+      })
+      return filterRequireLineStream.end()
+    }
     // no chunk to process
     if (!f) return
 
@@ -159,7 +165,11 @@ function start (options) {
 
   filterRequireLineStream.unusedPackages = Object.assign({}, packageJson.dependencies, packageJson.optionalDependencies)
 
-  return filterRequireLineStream
+  var returnStream = new PassThrough({objectMode: true})
+  process.nextTick(() => {
+    filterRequireLineStream.pipe(returnStream)
+  })
+  return returnStream
 }
 
 module.exports = start

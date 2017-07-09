@@ -1,13 +1,14 @@
 'use strict'
 
 var path = require('path')
+var concatStream = require('concat-stream')
 
 var condom = require('../condom')
 
 var tap = require('tap')
 
 tap.test('ok', function (t) {
-  t.plan(2)
+  t.plan(3)
   var stream = condom({
     packageJson: require('./data/example1/package'),
     peerDependencies: true,
@@ -18,17 +19,22 @@ tap.test('ok', function (t) {
 
   var paths = {}
   stream.on('pipe', function (source) {
-    if (paths[source.filePath]) t.fail('File double scanned')
-    paths[source.filePath] = 1
+    source.on('pipe', function (s) {
+      if (paths[s.filePath]) t.fail('File double scanned')
+      paths[s.filePath] = 1
+    })
   })
 
-  var occurred = {}
-  stream.on('data', function (d) {
-    occurred[d.requiredModule] = occurred[d.requiredModule] || 0
-    occurred[d.requiredModule]++
-  })
-  stream.on('end', function () {
-    t.same(occurred, { split: 1, express: 1, foo: 1, bar: 1, '@types/blablabla': 1 })
+  stream.pipe(concatStream(function (data) {
+    const missesPackages = data.filter(c => c.type === 'miss').reduce(function (s, c) {
+      s[c.requiredModule] = 1
+      return s
+    }, {})
+    t.same(missesPackages, { split: 1, express: 1, foo: 1, bar: 1, '@types/blablabla': 1 })
+
+    const unusedPackages = data.filter(c => c.type === 'unused').map(c => c.packageName)
+    t.same(unusedPackages, [])
+
     var expectedPaths = [
       path.join(__dirname, '/data/example1/index.js'),
       path.join(__dirname, '/data/example1/jquery-3.1.1_1.js'),
@@ -47,5 +53,5 @@ tap.test('ok', function (t) {
       path.join(__dirname, '/data/example1/jquery_9.js')
     ]
     t.same(Object.keys(paths), expectedPaths)
-  })
+  }))
 })

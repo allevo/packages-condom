@@ -9,9 +9,13 @@ module.exports = function (stream, outputStream) {
   const transform = through2(options, function (data, enc, callback) {
     exitStatus = 1
     // console.log(data)
-    const {line: lineNumber, filePath, requiredModule} = data
+    const {line: lineNumber, filePath, requiredModule, type, packageName} = data
 
-    callback(null, 'Package ' + requiredModule + ' is required at ' + filePath + ':' + lineNumber + '\n')
+    if (type === 'miss') {
+      callback(null, 'Package ' + requiredModule + ' is required at ' + filePath + ':' + lineNumber + '\n')
+    } else {
+      callback(null, 'Unused package ' + packageName + '\n')
+    }
   })
   transform.on('end', function (cb) {
     console.log('Unused packages', stream.unusedPackages)

@@ -3,6 +3,7 @@
 var path = require('path')
 var condom = require('../condom')
 var tap = require('tap')
+var concatStream = require('concat-stream')
 
 tap.test('unusedPackages work well', function (t) {
   t.plan(1)
@@ -14,13 +15,9 @@ tap.test('unusedPackages work well', function (t) {
     }
   })
 
-  stream.on('end', function () {
-    t.same(stream.unusedPackages, {
-      bar: '^1.3.2',
-      is: '^1.3.2',
-      foo: '^1.3.2'
-    })
+  stream.pipe(concatStream((data) => {
+    const unusedPackages = data.filter(c => c.type === 'unused').map(c => c.packageName)
+    t.same(unusedPackages, [ 'foo', 'bar', 'is' ])
     t.end()
-  })
-  stream.resume()
+  }))
 })
