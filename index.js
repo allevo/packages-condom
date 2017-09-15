@@ -29,7 +29,7 @@ if (argv['no-dependency']) {
 }
 
 if (argv['peer-dependency']) {
-  options.peerDependencies = false
+  options.peerDependencies = true
 }
 if (argv['no-optional-dependency']) {
   options.optionalDependencies = false
