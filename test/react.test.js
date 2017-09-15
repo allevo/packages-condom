@@ -6,7 +6,7 @@ var download = require('download-git-repo')
 var tap = require('tap')
 var condom = require('../condom')
 
-download('facebook/react', 'test/data/react', function (err) {
+download('facebook/react#b5ac963fb791d1298e7f396236383bc955f916c1', 'test/data/react', function (err) {
   if (err) throw err
 
   tap.test('react should be ok', function (t) {

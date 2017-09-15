@@ -6,7 +6,7 @@ var download = require('download-git-repo')
 var tap = require('tap')
 var condom = require('../condom')
 
-download('expressjs/express', 'test/data/express', function (err) {
+download('expressjs/express#efd7032f71f3ef18060a100edc4aa11f4c912dde', 'test/data/express', function (err) {
   if (err) throw err
 
   tap.test('express should be ok', function (t) {

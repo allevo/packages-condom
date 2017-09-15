@@ -6,7 +6,7 @@ var download = require('download-git-repo')
 var tap = require('tap')
 var condom = require('../condom')
 
-download('visionmedia/debug', 'test/data/debug', function (err) {
+download('visionmedia/debug#ff432e76e98f4224917af75a2d2dd1057edff3ac', 'test/data/debug', function (err) {
   if (err) throw err
 
   tap.test('debug should be ok', function (t) {
