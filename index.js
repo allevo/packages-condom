@@ -4,7 +4,8 @@
 var fs = require('fs')
 var path = require('path')
 var argv = require('minimist')(process.argv.slice(2), {
-  boolean: ['only-dependency', 'no-dependency', 'peer-dependency', 'no-optional-dependency']
+  boolean: ['only-dependency', 'no-dependency', 'peer-dependency', 'no-optional-dependency'],
+  string: 'glob-pattern'
 })
 
 var basePath = argv._.pop() + ''
@@ -33,6 +34,9 @@ if (argv['peer-dependency']) {
 }
 if (argv['no-optional-dependency']) {
   options.optionalDependencies = false
+}
+if (argv['glob-pattern']) {
+  options.globPattern = argv['glob-pattern']
 }
 
 var stream = condom(options)
