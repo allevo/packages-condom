@@ -38,6 +38,7 @@ jspm_packages
 
 
 test/data/*
+!test/data/example4
 !test/data/example3
 !test/data/example2
 !test/data/example1
