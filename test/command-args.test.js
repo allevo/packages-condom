@@ -58,3 +58,12 @@ tap.test('glob-pattern', t => {
     t.match(stdout, 'Unused package is')
   })
 })
+
+tap.test('no directory', t => {
+  t.plan(2)
+
+  childProcess.execFile('node', [cliPath, 'package.json'], (error, stdout, stderr) => {
+    t.equal(error.code, 1)
+    t.match(stderr, 'First params should be a directory path')
+  })
+})
