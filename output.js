@@ -7,10 +7,9 @@ module.exports = function (stream, outputStream) {
   var exitStatus = 0
   const options = {readableObjectMode: false, writableObjectMode: true}
   const transform = through2(options, function (data, enc, callback) {
-    exitStatus = 1
-
     const type = data.type
     if (type === 'miss') {
+      exitStatus = 1
       const lineNumber = data.line
       const filePath = data.filePath
       const requiredModule = data.requiredModule
