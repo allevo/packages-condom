@@ -14,6 +14,9 @@
     "coverage": "tap --cov --coverage-report=html -J -t 60 test/*.js",
     "coveralls": "tap test/*.js --cov --coverage-report=text-lcov -J -t 60 | coveralls"
   },
+  "standard": {
+    "ignore": ["/test/data/"]
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/allevo/packages-condom.git"
