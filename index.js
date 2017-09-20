@@ -4,7 +4,13 @@
 var fs = require('fs')
 var path = require('path')
 var argv = require('minimist')(process.argv.slice(2), {
-  boolean: ['only-dependency', 'no-dependency', 'peer-dependency', 'no-optional-dependency']
+  default: {
+    'dependency': true,
+    'peer-dependency': false,
+    'optional-dependency': true
+  },
+  boolean: ['dependency', 'peer-dependency', 'optional-dependency'],
+  string: 'glob-pattern'
 })
 
 var basePath = argv._.pop() + ''
@@ -20,19 +26,13 @@ var globOptions = {
 var options = {
   globOptions: globOptions,
   packageJson: require(path.resolve(path.join(basePath, 'package.json'))),
-  dependencies: true,
-  peerDependencies: false,
-  optionalDependencies: true
-}
-if (argv['no-dependency']) {
-  options.dependencies = false
+  dependencies: argv['dependency'],
+  peerDependencies: argv['peer-dependency'],
+  optionalDependencies: argv['optional-dependency']
 }
 
-if (argv['peer-dependency']) {
-  options.peerDependencies = false
-}
-if (argv['no-optional-dependency']) {
-  options.optionalDependencies = false
+if (argv['glob-pattern']) {
+  options.globPattern = argv['glob-pattern']
 }
 
 var stream = condom(options)

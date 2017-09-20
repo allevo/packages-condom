@@ -29,6 +29,8 @@ To change the default configuration, some CLI parameters are allowed:
 - `--no-dependency`
 - `--peer-dependency`
 - `--no-optional-dependency`
+- `--glob-pattern <string>`
+ Overwrite glob pattern (specify multiple times to include/exclude a list). Default is `['**/*.js', '!node_modules/**/*', '!test/**/*', '!tests/**/*']`
 
 ## Todo
 

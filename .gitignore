@@ -37,7 +37,8 @@ jspm_packages
 .node_repl_history
 
 
+test/data/*
+!test/data/example4
 !test/data/example3
 !test/data/example2
 !test/data/example1
-test/data/*

@@ -56,9 +56,9 @@ function start (options) {
   packageJson.peerDependencies = packageJson.peerDependencies || {}
   packageJson.optionalDependencies = packageJson.optionalDependencies || {}
 
-  var allowDependencies = options.dependencies || true
-  var allowPeerDependencies = options.peerDependencies || false
-  var allowOptionalDependency = options.optionalDependencies || true
+  var allowDependencies = options.dependencies === undefined ? true : options.dependencies
+  var allowPeerDependencies = options.peerDependencies === undefined ? false : options.peerDependencies
+  var allowOptionalDependency = options.optionalDependencies === undefined ? true : options.optionalDependencies
 
   globOptions.absolute = true
   var globStream = getGlobStream(globPattern, globOptions)
