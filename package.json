@@ -1,6 +1,6 @@
 {
   "name": "packages-condom",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Check your code are not using some dev depedencies",
   "main": "index.js",
   "bin": {
@@ -15,7 +15,9 @@
     "coveralls": "tap test/*.js --cov --coverage-report=text-lcov -J -t 60 | coveralls"
   },
   "standard": {
-    "ignore": ["/test/data/"]
+    "ignore": [
+      "/test/data/"
+    ]
   },
   "repository": {
     "type": "git",
